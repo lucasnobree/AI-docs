@@ -1250,6 +1250,31 @@ const ROADMAP_DATA = {
           link: null
         }
       ]
+    },
+    {
+      group: 'Agentes e Automação',
+      items: [
+        {
+          q: 'O que são agentes de IA?',
+          a: 'Agentes são instâncias do Claude com um objetivo específico, ferramentas disponíveis e contexto próprio. Em vez de uma conversa linear, você delega tarefas a agentes especializados: um implementa código, outro roda testes, outro revisa qualidade. Cada agente opera de forma isolada e reporta o resultado ao coordenador.',
+          link: null
+        },
+        {
+          q: 'O que é o modelo orquestrador + subagentes?',
+          a: 'O orquestrador é o chat principal — planeja, delega e coordena. Os subagentes são processos filhos com contexto isolado, cada um focado em uma tarefa específica. O orquestrador repassa exatamente o contexto necessário para cada subagente, sem herdar o histórico da sessão principal. Isso evita poluição de contexto e mantém cada agente focado.',
+          link: null
+        },
+        {
+          q: 'É possível rodar múltiplos agentes em paralelo no mesmo chat?',
+          a: 'Sim. Quando o Claude dispara múltiplas chamadas de Agent em uma mesma mensagem, eles rodam em paralelo — cada um com seu próprio contexto isolado. A restrição é que agentes paralelos não devem editar os mesmos arquivos ao mesmo tempo, para evitar conflito. Para tasks no mesmo arquivo, rode sequencialmente.',
+          link: null
+        },
+        {
+          q: 'Qual a diferença entre um chat normal e um agente?',
+          a: 'Um chat normal é interativo — você e o Claude alternam mensagens. Um agente é autônomo — recebe um objetivo, executa uma sequência de ações (ler arquivos, editar código, rodar comandos), e retorna o resultado. Agentes são usados para tarefas complexas que exigem múltiplos passos sem intervenção humana a cada etapa.',
+          link: null
+        }
+      ]
     }
   ]
 };

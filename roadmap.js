@@ -230,6 +230,9 @@ function buildFaq() {
         <h2>FAQ — Perguntas Frequentes</h2>
         <div class="duration">Referencia rapida sobre Claude, skills, plugins e boas praticas</div>
       </div>
+    </div>
+    <div class="section" style="padding-bottom:0;">
+      <input type="text" class="faq-search" placeholder="Buscar pergunta ou resposta..." oninput="filterFaq(this.value)">
     </div>`;
 
   const groupsHtml = ROADMAP_DATA.faq.map(group => {
@@ -261,6 +264,22 @@ function buildFaq() {
   }).join('');
 
   container.innerHTML = headerHtml + groupsHtml;
+}
+
+function filterFaq(query) {
+  const term = query.trim().toLowerCase();
+  const sections = document.querySelectorAll('#faq .section');
+  sections.forEach(section => {
+    if (!section.querySelector('.doc-block')) return; // skip search bar section
+    let anyVisible = false;
+    section.querySelectorAll('.doc-block').forEach(block => {
+      const text = block.textContent.toLowerCase();
+      const visible = !term || text.includes(term);
+      block.style.display = visible ? '' : 'none';
+      if (visible) anyVisible = true;
+    });
+    section.style.display = anyVisible ? '' : 'none';
+  });
 }
 
 // ============================================================
