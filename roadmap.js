@@ -219,3 +219,281 @@ function buildDiscord() {
 
   el.innerHTML = headerHtml + channelsHtml + communitiesHtml + tipHtml;
 }
+
+// ============================================================
+// INTERACTIVE FUNCTIONS (migrated from original HTML)
+// ============================================================
+
+const STORAGE_KEY = 'ai-roadmap-progress-v2';
+const NOTES_KEY = 'ai-roadmap-notes-v2';
+
+function showPhase(id, btn) {
+    document.querySelectorAll('.phase').forEach(p => p.classList.remove('active'));
+    document.querySelectorAll('.tab-btn').forEach(b => b.classList.remove('active'));
+    document.getElementById(id).classList.add('active');
+    if (btn) btn.classList.add('active');
+  }
+
+  function goToDoc(docId) {
+    // Switch to docs tab
+    document.querySelectorAll('.phase').forEach(p => p.classList.remove('active'));
+    document.querySelectorAll('.tab-btn').forEach(b => b.classList.remove('active'));
+    document.getElementById('docs').classList.add('active');
+    // Activate the correct tab button
+    document.querySelectorAll('.tab-btn').forEach(b => {
+      if (b.textContent.trim() === 'Documentacao') b.classList.add('active');
+    });
+    // Open the target doc block
+    const block = document.getElementById(docId);
+    if (block) {
+      const header = block.querySelector('.doc-header');
+      const body = block.querySelector('.doc-body');
+      if (!header.classList.contains('open')) {
+        header.classList.add('open');
+        body.classList.add('open');
+      }
+      // Highlight and scroll
+      block.style.transition = 'box-shadow 0.3s, border-color 0.3s';
+      block.style.borderColor = 'var(--accent)';
+      block.style.boxShadow = '0 0 20px rgba(124,92,252,0.3)';
+      setTimeout(() => block.scrollIntoView({ behavior: 'smooth', block: 'start' }), 100);
+      setTimeout(() => {
+        block.style.borderColor = '';
+        block.style.boxShadow = '';
+      }, 3000);
+    }
+  }
+
+  function toggleDoc(header) {
+    header.classList.toggle('open');
+    header.nextElementSibling.classList.toggle('open');
+  }
+
+  function saveProgress() {
+    const checkboxes = document.querySelectorAll('.checklist input[type="checkbox"]');
+    const states = Array.from(checkboxes).map(cb => cb.checked);
+    localStorage.setItem(STORAGE_KEY, JSON.stringify(states));
+    updateStats();
+  }
+
+  function loadProgress() {
+    const saved = localStorage.getItem(STORAGE_KEY);
+    if (saved) {
+      const states = JSON.parse(saved);
+      const checkboxes = document.querySelectorAll('.checklist input[type="checkbox"]');
+      checkboxes.forEach((cb, i) => { if (states[i] !== undefined) cb.checked = states[i]; });
+    }
+    updateStats();
+  }
+
+  function updateStats() {
+    const checkboxes = document.querySelectorAll('.checklist input[type="checkbox"]');
+    const total = checkboxes.length;
+    const done = Array.from(checkboxes).filter(cb => cb.checked).length;
+    const percent = total > 0 ? Math.round((done / total) * 100) : 0;
+    document.getElementById('statTotal').textContent = total;
+    document.getElementById('statDone').textContent = done;
+    document.getElementById('statPending').textContent = total - done;
+    document.getElementById('globalPercent').textContent = percent + '%';
+    document.getElementById('globalFill').style.width = percent + '%';
+  }
+
+  function saveNotes() {
+    const notes = {
+      general: document.getElementById('notesGeneral').value,
+      questions: document.getElementById('notesQuestions').value,
+      ideas: document.getElementById('notesIdeas').value,
+      prompts: document.getElementById('notesPrompts').value
+    };
+    localStorage.setItem(NOTES_KEY, JSON.stringify(notes));
+  }
+
+  function loadNotes() {
+    const saved = localStorage.getItem(NOTES_KEY);
+    if (saved) {
+      const n = JSON.parse(saved);
+      document.getElementById('notesGeneral').value = n.general || '';
+      document.getElementById('notesQuestions').value = n.questions || '';
+      document.getElementById('notesIdeas').value = n.ideas || '';
+      document.getElementById('notesPrompts').value = n.prompts || '';
+    }
+  }
+
+  function exportProgress() {
+    const data = {
+      version: 2,
+      date: new Date().toISOString(),
+      progress: localStorage.getItem(STORAGE_KEY),
+      notes: localStorage.getItem(NOTES_KEY)
+    };
+    const blob = new Blob([JSON.stringify(data, null, 2)], {type: 'application/json'});
+    const a = document.createElement('a');
+    a.href = URL.createObjectURL(blob);
+    a.download = 'roadmap-backup-' + new Date().toISOString().slice(0,10) + '.json';
+    a.click();
+  }
+
+  function importProgress(event) {
+    const file = event.target.files[0];
+    if (!file) return;
+    const reader = new FileReader();
+    reader.onload = function(e) {
+      try {
+        const data = JSON.parse(e.target.result);
+        if (data.progress) localStorage.setItem(STORAGE_KEY, data.progress);
+        if (data.notes) localStorage.setItem(NOTES_KEY, data.notes);
+        loadProgress();
+        loadNotes();
+        alert('Progresso importado com sucesso! Data do backup: ' + (data.date || 'desconhecida'));
+      } catch (err) {
+        alert('Erro ao importar: arquivo invalido.');
+      }
+    };
+    reader.readAsText(file);
+    event.target.value = '';
+  }
+
+  function exportProgressTxt() {
+    const checkboxes = document.querySelectorAll('.checklist input[type="checkbox"]');
+    const total = checkboxes.length;
+    const done = Array.from(checkboxes).filter(cb => cb.checked).length;
+    let txt = '=== ROADMAP AI ENGINEER - RESUMO DE PROGRESSO ===\n';
+    txt += 'Data: ' + new Date().toLocaleDateString('pt-BR') + '\n';
+    txt += 'Progresso: ' + done + '/' + total + ' (' + Math.round(done/total*100) + '%)\n\n';
+
+    document.querySelectorAll('.phase').forEach(phase => {
+      const h2 = phase.querySelector('h2');
+      if (!h2) return;
+      const items = phase.querySelectorAll('.checklist li');
+      if (items.length === 0) return;
+      txt += '--- ' + h2.textContent + ' ---\n';
+      items.forEach(li => {
+        const cb = li.querySelector('input[type="checkbox"]');
+        const text = li.querySelector('.item-text');
+        if (cb && text) {
+          const label = text.childNodes[0].textContent.trim();
+          txt += (cb.checked ? '[x] ' : '[ ] ') + label + '\n';
+        }
+      });
+      txt += '\n';
+    });
+
+    const notes = localStorage.getItem(NOTES_KEY);
+    if (notes) {
+      const n = JSON.parse(notes);
+      if (n.general) txt += '--- APRENDIZADOS ---\n' + n.general + '\n\n';
+      if (n.questions) txt += '--- DUVIDAS ---\n' + n.questions + '\n\n';
+      if (n.ideas) txt += '--- IDEIAS ---\n' + n.ideas + '\n\n';
+      if (n.prompts) txt += '--- PROMPTS ---\n' + n.prompts + '\n\n';
+    }
+
+    const blob = new Blob([txt], {type: 'text/plain'});
+    const a = document.createElement('a');
+    a.href = URL.createObjectURL(blob);
+    a.download = 'roadmap-resumo-' + new Date().toISOString().slice(0,10) + '.txt';
+    a.click();
+  }
+
+  function buildDocChecklists() {
+    // Map: docId -> [{index, label, phaseNum}]
+    const docMap = {};
+    const allCheckboxes = document.querySelectorAll('#phase1 .checklist li, #phase2 .checklist li, #phase3 .checklist li, #phase4 .checklist li');
+
+    allCheckboxes.forEach((li, idx) => {
+      const link = li.querySelector('a.item-link');
+      if (!link) return;
+      const onclick = link.getAttribute('onclick') || '';
+      const match = onclick.match(/goToDoc\('([^']+)'\)/);
+      if (!match) return;
+      const docId = match[1];
+      // Detect phase number
+      let phaseNum = 0;
+      if (li.closest('#phase1')) phaseNum = 1;
+      else if (li.closest('#phase2')) phaseNum = 2;
+      else if (li.closest('#phase3')) phaseNum = 3;
+      else if (li.closest('#phase4')) phaseNum = 4;
+      // Get clean label text (first text node of item-text)
+      const itemText = li.querySelector('.item-text');
+      const label = link.textContent.trim();
+
+      if (!docMap[docId]) docMap[docId] = [];
+      docMap[docId].push({ index: idx, label, phaseNum });
+    });
+
+    // For each doc block, append related items
+    Object.keys(docMap).forEach(docId => {
+      const block = document.getElementById(docId);
+      if (!block) return;
+      const body = block.querySelector('.doc-body');
+      if (!body) return;
+
+      // Remove existing (in case of rebuild)
+      const existing = body.querySelector('.doc-related');
+      if (existing) existing.remove();
+
+      const items = docMap[docId];
+      const container = document.createElement('div');
+      container.className = 'doc-related';
+      container.innerHTML = '<div class="doc-related-title">Marque seu progresso aqui</div>';
+
+      const ul = document.createElement('ul');
+      ul.className = 'doc-checklist';
+
+      items.forEach(item => {
+        const li = document.createElement('li');
+        const cb = document.createElement('input');
+        cb.type = 'checkbox';
+        // Sync with original
+        const originalCb = allCheckboxes[item.index].querySelector('input[type="checkbox"]');
+        cb.checked = originalCb.checked;
+
+        cb.addEventListener('change', () => {
+          originalCb.checked = cb.checked;
+          saveProgress();
+          // Update visual in doc
+          updateDocChecklistVisuals();
+        });
+
+        // Also listen to original changes
+        originalCb.addEventListener('change', () => {
+          cb.checked = originalCb.checked;
+        });
+
+        const phaseTag = document.createElement('span');
+        phaseTag.className = 'phase-tag phase-tag-' + item.phaseNum;
+        phaseTag.textContent = 'Fase ' + item.phaseNum;
+
+        const labelSpan = document.createElement('span');
+        labelSpan.className = 'item-label';
+        labelSpan.textContent = item.label;
+
+        li.appendChild(cb);
+        li.appendChild(phaseTag);
+        li.appendChild(labelSpan);
+        ul.appendChild(li);
+      });
+
+      container.appendChild(ul);
+      body.appendChild(container);
+    });
+  }
+
+  function updateDocChecklistVisuals() {
+    // Just trigger a re-render of stats
+    updateStats();
+  }
+
+// ============================================================
+// INIT
+// ============================================================
+// DOMContentLoaded is more robust than inline execution at end of <body>
+document.addEventListener('DOMContentLoaded', () => {
+  buildPhases();
+  buildDocs();
+  buildResources();
+  buildGlossary();
+  buildDiscord();
+  loadProgress();       // AFTER buildPhases/buildDocs — needs checkboxes in DOM
+  loadNotes();
+  buildDocChecklists(); // AFTER buildPhases/buildDocs — uses querySelector on phases
+});
