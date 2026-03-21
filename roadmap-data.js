@@ -182,7 +182,72 @@ const ROADMAP_DATA = {
     }
   ],
   docs: [],
-  resources: [],
-  glossary: [],
-  discord: { intro: '', channels: [], communities: [], tip: '' }
+  resources: [
+    { section: 'Cursos Essenciais (Anthropic)', tag: 'course', title: 'Anthropic API Fundamentals', desc: 'Curso 1. Base obrigatoria: API, tokens, primeiras chamadas. Faca em 1 dia.', url: 'https://github.com/anthropics/courses/tree/master/anthropic_api_fundamentals' },
+    { section: 'Cursos Essenciais (Anthropic)', tag: 'free', title: 'Anthropic Cookbook', desc: 'Notebooks praticos de referencia. Use como consulta para cada tecnica.', url: 'https://github.com/anthropics/anthropic-cookbook' },
+    { section: 'Cursos Essenciais (Anthropic)', tag: 'course', title: 'Real World Prompting', desc: 'Curso 3. Tecnicas aplicadas em casos reais. Para Fase 2.', url: 'https://github.com/anthropics/courses/tree/master/real_world_prompting' },
+    { section: 'Cursos Essenciais (Anthropic)', tag: 'course', title: 'Prompt Evaluations', desc: 'Curso 4. Como medir qualidade de prompts. Para Fase 3.', url: 'https://github.com/anthropics/courses/tree/master/prompt_evaluations' },
+    { section: 'Cursos Essenciais (Anthropic)', tag: 'course', title: 'Tool Use & Agents', desc: 'Curso 5. Function calling e construcao de agentes. Para Fase 3.', url: 'https://github.com/anthropics/courses/tree/master/tool_use' },
+    { section: 'Cursos Essenciais (Anthropic)', tag: 'free', title: 'DAIR.AI Prompt Engineering Guide', desc: 'Referencia externa mais completa. Cobre todas as tecnicas com papers.', url: 'https://www.promptingguide.ai/' },
+    { section: 'Cursos Complementares', tag: 'course', title: 'Building Systems with ChatGPT API', desc: 'DeepLearning.AI. Aplicavel ao Claude. Bom para visao geral de sistemas.', url: 'https://www.deeplearning.ai/short-courses/building-systems-with-chatgpt/' },
+    { section: 'Cursos Complementares', tag: 'course', title: 'LangChain for LLM App Development', desc: 'DeepLearning.AI. Framework popular para agentes e RAG.', url: 'https://www.deeplearning.ai/short-courses/langchain-for-llm-application-development/' },
+    { section: 'Cursos Complementares', tag: 'course', title: 'Building Agentic RAG', desc: 'DeepLearning.AI. RAG com agentes. Para Fase 3.', url: 'https://www.deeplearning.ai/short-courses/building-agentic-rag-with-llamaindex/' },
+    { section: 'Cursos Complementares', tag: 'free', title: 'Learn Prompting', desc: 'Curso interativo do basico ao avancado. Inclui prompt injection e tecnicas avancadas.', url: 'https://learnprompting.org/' },
+    { section: 'Cursos Complementares', tag: 'course', title: 'DAIR.AI Lecture Completa', desc: 'Video de 1h resumindo todas as tecnicas de prompt engineering. Bom para uma visao geral rapida.', url: 'https://youtu.be/dOxUroR57xs' },
+    { section: 'Documentacao Essencial', tag: 'docs', title: 'Prompt Engineering Guide (Oficial)', desc: 'Guia consolidado #1. A aba "Documentacao" deste painel resume todos os pontos-chave.', url: 'https://docs.anthropic.com/en/docs/build-with-claude/prompt-engineering/overview' },
+    { section: 'Documentacao Essencial', tag: 'docs', title: 'Modelos Claude - Comparativo', desc: 'Opus vs Sonnet vs Haiku. Capacidades, limites, precos.', url: 'https://docs.anthropic.com/en/docs/about-claude/models' },
+    { section: 'Documentacao Essencial', tag: 'docs', title: 'Tool Use (Function Calling)', desc: 'Base para agentes. Leia antes da Fase 3.', url: 'https://docs.anthropic.com/en/docs/build-with-claude/tool-use/overview' },
+    { section: 'Documentacao Essencial', tag: 'docs', title: 'Claude Code Docs', desc: 'Voce ja usa. Entenda como funciona por dentro.', url: 'https://docs.anthropic.com/en/docs/agents-and-tools/claude-code/overview' },
+    { section: 'Documentacao Essencial', tag: 'docs', title: 'Context Caching', desc: 'Reduzir custo e latencia cacheando prompt. Para producao.', url: 'https://docs.anthropic.com/en/docs/build-with-claude/context-caching' },
+    { section: 'Ferramentas', tag: 'tool', title: 'Anthropic Workbench', desc: 'Testar prompts com diferentes parametros em tempo real. Use DIARIAMENTE.', url: 'https://console.anthropic.com/workbench' },
+    { section: 'Ferramentas', tag: 'tool', title: 'Anthropic Console', desc: 'API keys, uso, custos. Seu painel de controle.', url: 'https://console.anthropic.com/' },
+    { section: 'Ferramentas', tag: 'tool', title: 'Claude Code (Fonte)', desc: 'Codigo-fonte aberto. Agente real para estudar.', url: 'https://github.com/anthropics/claude-code' },
+    { section: 'Blogs, Podcasts & Comunidades', tag: 'book', title: 'Anthropic Research Blog', desc: 'Papers e posts sobre safety e como modelos funcionam.', url: 'https://www.anthropic.com/research' },
+    { section: 'Blogs, Podcasts & Comunidades', tag: 'book', title: "Simon Willison's Blog", desc: 'O melhor blog sobre IA pratica. Posts diarios.', url: 'https://simonwillison.net/' },
+    { section: 'Blogs, Podcasts & Comunidades', tag: 'book', title: 'Latent Space', desc: 'Podcast tecnico com engenheiros que constroem com LLMs.', url: 'https://www.latent.space/' },
+    { section: 'Blogs, Podcasts & Comunidades', tag: 'book', title: 'Anthropic YouTube', desc: 'Videos, demos e tutoriais oficiais.', url: 'https://www.youtube.com/@anthropic-ai' },
+    { section: 'Blogs, Podcasts & Comunidades', tag: 'community', title: 'Anthropic Discord', desc: 'Comunidade oficial. Prompt engineering, showcases.', url: 'https://discord.gg/anthropic' },
+    { section: 'Blogs, Podcasts & Comunidades', tag: 'community', title: 'r/ClaudeAI', desc: 'Discussoes praticas sobre Claude.', url: 'https://reddit.com/r/ClaudeAI' },
+    { section: 'Blogs, Podcasts & Comunidades', tag: 'community', title: 'r/PromptEngineering', desc: 'Tecnicas de prompt engineering.', url: 'https://reddit.com/r/PromptEngineering' }
+  ],
+  glossary: [
+    { term: 'LLM', def: 'Large Language Model. Modelo treinado em texto massivo. Claude, GPT, Gemini.' },
+    { term: 'Token', def: 'Unidade de texto processada. ~4 chars ingles, ~2-3 portugues. Tudo e medido em tokens.' },
+    { term: 'Context Window', def: 'Max tokens por interacao (input+output). Claude: 200k tokens.' },
+    { term: 'Temperature', def: 'Controla aleatoriedade. 0=deterministico, 1=criativo.' },
+    { term: 'System Prompt', def: 'Instrucao base que define comportamento. Persiste em toda conversa.' },
+    { term: 'Hallucination', def: 'Modelo gera info falsa com confianca. Mitigar com RAG e validacao.' },
+    { term: 'Few-shot', def: 'Dar exemplos (2-5) no prompt para guiar formato e comportamento.' },
+    { term: 'Chain-of-Thought', def: 'Raciocinio passo a passo. Melhora acuracia em logica e matematica.' },
+    { term: 'RAG', def: 'Retrieval-Augmented Generation. Buscar info em base de dados antes de gerar resposta.' },
+    { term: 'Embedding', def: 'Texto como vetor numerico. Textos similares = vetores proximos. Base para busca semantica.' },
+    { term: 'Tool Use', def: 'Modelo chama funcoes externas (APIs, banco, codigo). Base para agentes.' },
+    { term: 'Agent', def: 'Sistema com LLM que toma decisoes e executa acoes. Loop: pensar > agir > observar.' },
+    { term: 'Eval', def: 'Avaliacao sistematica de qualidade de outputs. Essencial para producao.' },
+    { term: 'Prompt Injection', def: 'Ataque onde usuario manipula prompt. Risco de seguranca #1.' },
+    { term: 'MCP', def: 'Model Context Protocol. Protocolo aberto para conectar LLMs a dados/ferramentas.' },
+    { term: 'Fine-tuning', def: 'Treinar modelo com dados especificos. Ultimo recurso, nao primeiro.' },
+    { term: 'Guardrails', def: 'Restricoes que impedem output indesejado ou acoes nao autorizadas.' },
+    { term: 'Adaptive Thinking', def: 'Claude 4.6: decide sozinho quando e quanto pensar. Supera extended thinking.' },
+    { term: 'Structured Output', def: 'Forcar resposta em schema (JSON). API feature para integracao confiavel.' },
+    { term: 'Chunking', def: 'Dividir documentos em pedacos para RAG. Tamanho e overlap afetam qualidade.' }
+  ],
+  discord: {
+    intro: 'Crie um servidor pessoal com estes canais:',
+    channels: [
+      { name: '#daily-log', desc: '2-3 linhas do que estudou/praticou. Consistencia > volume.' },
+      { name: '#prompts-lab', desc: 'Prompts testados com resultado. Seu cookbook vivo.' },
+      { name: '#recursos', desc: 'Links de artigos, videos, tools. Organize com tags.' },
+      { name: '#duvidas', desc: 'Perguntas que surgirem. Responda quando descobrir.' },
+      { name: '#wins', desc: 'Vitorias. Prompt que resolveu problema real, agente que funcionou.' },
+      { name: '#ideias-empresa', desc: 'Oportunidades de IA no dia a dia.' }
+    ],
+    communities: [
+      { text: 'Anthropic Discord (oficial)', detail: null },
+      { text: 'LangChain Discord', detail: 'Muita discussao pratica sobre agentes e RAG.' },
+      { text: 'Hugging Face Discord', detail: 'Comunidade de ML. Modelos open-source e fine-tuning.' },
+      { text: 'MLOps Community', detail: 'ML/IA em producao. Relevante para fases 3-4.' }
+    ],
+    tip: 'Use o Claude Code ou chat como tutor particular 24/7 durante seus estudos. Mas valide informacoes criticas com a documentacao oficial.'
+  }
 };
