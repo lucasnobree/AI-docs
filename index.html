@@ -34,6 +34,10 @@
     <div class="stat-card"><div class="number" style="color:var(--blue)">23</div><div class="desc">Documentacoes</div></div>
   </div>
 
+  <div class="welcome-banner">
+    <strong>Novo por aqui?</strong> Comece pela <a href="#" onclick="showPhase('phase1', document.querySelector('.tab-btn'));return false;">Fase 1 — Fundamentos</a>. Nao sabe o que e o Claude? Va direto para o <a href="#" onclick="showPhase('faq', document.querySelectorAll('.tab-btn')[9]);return false;">FAQ</a>.
+  </div>
+
   <div class="tabs">
     <button class="tab-btn active" onclick="showPhase('phase1',this)">Fase 1 - Fundamentos</button>
     <button class="tab-btn" onclick="showPhase('phase2',this)">Fase 2 - Prompts</button>
