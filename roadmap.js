@@ -220,6 +220,49 @@ function buildDiscord() {
   el.innerHTML = headerHtml + channelsHtml + communitiesHtml + tipHtml;
 }
 
+function buildFaq() {
+  const container = document.getElementById('faq');
+
+  const headerHtml = `
+    <div class="phase-header">
+      <div class="phase-badge" style="background:var(--accent-glow);color:var(--accent);">?</div>
+      <div class="phase-info">
+        <h2>FAQ — Perguntas Frequentes</h2>
+        <div class="duration">Referencia rapida sobre Claude, skills, plugins e boas praticas</div>
+      </div>
+    </div>`;
+
+  const groupsHtml = ROADMAP_DATA.faq.map(group => {
+    const itemsHtml = group.items.map(item => {
+      const linkHtml = item.link
+        ? item.link.type === 'doc'
+          ? `<a class="link-out" href="#" onclick="goToDoc('${item.link.docId}');return false;">${item.link.text} &rarr;</a>`
+          : `<a class="link-out" href="${item.link.url}" target="_blank">${item.link.text} &rarr;</a>`
+        : '';
+
+      return `
+        <div class="doc-block">
+          <div class="doc-header" onclick="toggleDoc(this)">
+            <h3>${item.q}</h3>
+            <span class="arrow">&#9660;</span>
+          </div>
+          <div class="doc-body">
+            <p>${item.a}</p>
+            ${linkHtml}
+          </div>
+        </div>`;
+    }).join('');
+
+    return `
+      <div class="section">
+        <h3>${group.group}</h3>
+        ${itemsHtml}
+      </div>`;
+  }).join('');
+
+  container.innerHTML = headerHtml + groupsHtml;
+}
+
 // ============================================================
 // INTERACTIVE FUNCTIONS (migrated from original HTML)
 // ============================================================
@@ -493,6 +536,7 @@ document.addEventListener('DOMContentLoaded', () => {
   buildResources();
   buildGlossary();
   buildDiscord();
+  buildFaq();           // FAQ: sem checkboxes, nao afeta indice do localStorage
   loadProgress();       // AFTER buildPhases/buildDocs — needs checkboxes in DOM
   loadNotes();
   buildDocChecklists(); // AFTER buildPhases/buildDocs — uses querySelector on phases
