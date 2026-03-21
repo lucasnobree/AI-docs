@@ -78,6 +78,107 @@ const ROADMAP_DATA = {
           ]
         }
       ]
+    },
+    {
+      id: 'phase3',
+      num: 3,
+      badge: '3',
+      color: 'blue',
+      title: 'Agentes & Sistemas de IA',
+      duration: 'Semanas 6-12 \u2022 Projetar sistemas, nao apenas prompts',
+      tip: 'Aqui seu background de dev brilha. Agentes sao software que usa LLMs como motor de decisao. Sua experiencia fullstack te da vantagem enorme.',
+      sections: [
+        {
+          title: 'Arquitetura de Agentes',
+          items: [
+            { text: 'Tool Use / Function Calling', detail: 'Dar "ferramentas" ao modelo. Doc 7 cobre tudo: como funciona, parallel calling, seguranca.', link: { type: 'doc', url: null, docId: 'doc-tooluse', badge: 'Doc 7' } },
+            { text: 'ReAct Pattern (Reasoning + Acting)', detail: 'Padrao fundamental de agentes. Artigo externo com paper original.', link: { type: 'ext', url: 'https://www.promptingguide.ai/techniques/react', docId: null, badge: 'DAIR.AI' } },
+            { text: 'Orquestracao de multiplos agentes', detail: 'Padrao orchestrator-workers. Notebook pratico hands-on.', link: { type: 'ext', url: 'https://github.com/anthropics/anthropic-cookbook/blob/main/patterns/agents/orchestrator_workers.ipynb', docId: null, badge: 'Cookbook' } },
+            { text: 'Memory e state management', detail: 'Doc 6 cobre state management, JSON, git para estado entre sessoes.', link: { type: 'doc', url: null, docId: 'doc-longcontext', badge: 'Doc 6' } },
+            { text: 'Error handling e fallbacks', detail: 'Workflows basicos com tratamento de erros. Notebook pratico.', link: { type: 'ext', url: 'https://github.com/anthropics/anthropic-cookbook/blob/main/patterns/agents/basic_workflows.ipynb', docId: null, badge: 'Cookbook' } },
+            { text: 'Claude Agent SDK', detail: 'SDK oficial. Comece pelo Research Agent (notebook pratico).', link: { type: 'ext', url: 'https://github.com/anthropics/anthropic-cookbook/blob/main/claude_agent_sdk/00_The_one_liner_research_agent.ipynb', docId: null, badge: 'Agent SDK' } },
+            { text: 'Arquitetura Fork vs Sub-agente', detail: 'Quando usar fork (herda contexto) vs sub-agente especializado. Extraido dos prompts reais.', link: { type: 'doc', url: null, docId: 'doc-agentes', badge: 'Doc 13' } },
+            { text: 'Sistema de Memoria para Agentes (4 tipos)', detail: 'User, feedback, project, reference — taxonomia de memoria do Claude.', link: { type: 'doc', url: null, docId: 'doc-memoria', badge: 'Doc 12' } },
+            { text: 'Orquestracao Paralela (Coordinator + Workers)', detail: 'Padrao avancado: decompor trabalho em unidades, lancar workers em worktrees isolados.', link: { type: 'doc', url: null, docId: 'doc-batch', badge: 'Doc 19' } },
+            { text: 'Plan Mode: Planejar antes de Implementar', detail: 'Workflow: explorar, perguntar, planejar, so entao executar.', link: { type: 'doc', url: null, docId: 'doc-planmode', badge: 'Doc 18' } },
+            { text: 'Criar Skills/Workflows Reutilizaveis', detail: 'Sistema SKILL.md com frontmatter, success criteria, human checkpoints.', link: { type: 'doc', url: null, docId: 'doc-skills', badge: 'Doc 20' } },
+            { text: 'Task Management & Background Execution', detail: 'Decompor trabalho em tarefas trackaveis, execucao em background.', link: { type: 'doc', url: null, docId: 'doc-tasks', badge: 'Doc 22' } }
+          ]
+        },
+        {
+          title: 'RAG (Retrieval-Augmented Generation)',
+          items: [
+            { text: 'O que e RAG e por que importa', detail: 'Conceito completo com paper original.', link: { type: 'ext', url: 'https://www.promptingguide.ai/techniques/rag', docId: null, badge: 'DAIR.AI' } },
+            { text: 'Embeddings e busca vetorial', detail: 'Criar embeddings com Voyage AI. Hands-on.', link: { type: 'ext', url: 'https://github.com/anthropics/anthropic-cookbook/blob/main/third_party/VoyageAI/how_to_create_embeddings.md', docId: null, badge: 'Cookbook' } },
+            { text: 'Chunking strategies', detail: 'Notebooks praticos de RAG completo.', link: { type: 'ext', url: 'https://github.com/anthropics/anthropic-cookbook/tree/main/capabilities/retrieval_augmented_generation', docId: null, badge: 'Cookbook' } },
+            { text: 'Vector databases (Pinecone, pgvector)', detail: 'RAG com Pinecone. Implementacao completa.', link: { type: 'ext', url: 'https://github.com/anthropics/anthropic-cookbook/blob/main/third_party/Pinecone/rag_using_pinecone.ipynb', docId: null, badge: 'Cookbook' } },
+            { text: 'Implementar RAG basico com docs da empresa', detail: 'Projeto pratico: indexar docs e criar chatbot.', link: { type: 'ext', url: 'https://github.com/anthropics/anthropic-cookbook/tree/main/capabilities/retrieval_augmented_generation', docId: null, badge: 'Cookbook' } }
+          ]
+        },
+        {
+          title: 'Avaliacao e Qualidade (Evals)',
+          items: [
+            { text: 'Por que evals sao essenciais', detail: 'Curso completo sobre avaliacoes de prompt.', link: { type: 'ext', url: 'https://github.com/anthropics/courses/tree/master/prompt_evaluations', docId: null, badge: 'Curso 4' } },
+            { text: 'Tipos de evals: automaticas vs humanas', detail: 'Notebook pratico de building evals.', link: { type: 'ext', url: 'https://github.com/anthropics/anthropic-cookbook/blob/main/misc/building_evals.ipynb', docId: null, badge: 'Cookbook' } },
+            { text: 'Criar eval set para caso de uso da empresa', detail: 'Inputs + outputs esperados. Rode contra versoes do prompt.', link: { type: 'ext', url: 'https://github.com/anthropics/anthropic-cookbook/blob/main/misc/building_evals.ipynb', docId: null, badge: 'Cookbook' } },
+            { text: 'Monitoramento em producao', detail: 'Rastrear qualidade, latencia, custo. Notebook pratico.', link: { type: 'ext', url: 'https://github.com/anthropics/anthropic-cookbook/blob/main/observability/usage_cost_api.ipynb', docId: null, badge: 'Cookbook' } }
+          ]
+        },
+        {
+          title: 'Seguranca e Guardrails',
+          items: [
+            { text: 'Prompt Injection e prevencao', detail: 'Artigo completo sobre ataques e defesas.', link: { type: 'ext', url: 'https://www.promptingguide.ai/risks/adversarial', docId: null, badge: 'DAIR.AI' } },
+            { text: 'Output validation e sanitization', detail: null, link: { type: 'ext', url: 'https://github.com/anthropics/anthropic-cookbook/blob/main/misc/building_moderation_filter.ipynb', docId: null, badge: 'Cookbook' } },
+            { text: 'Rate limiting e abuse prevention', detail: null, link: { type: 'ext', url: 'https://docs.anthropic.com/en/docs/build-with-claude/rate-limits', docId: null, badge: 'Docs' } },
+            { text: 'Data privacy e bias com LLMs', detail: 'PII, dados sensiveis, compliance (LGPD), bias em outputs.', link: { type: 'ext', url: 'https://www.promptingguide.ai/risks/biases', docId: null, badge: 'DAIR.AI' } },
+            { text: 'Guardrails & Classifiers Automaticos', detail: 'cyber_warning, ethics_reminder, system_warning — como a Anthropic filtra conteudo.', link: { type: 'doc', url: null, docId: 'doc-seguranca', badge: 'Doc 14' } },
+            { text: 'Git Safety Protocol para Agentes', detail: 'Regras de seguranca git: nunca force push, nunca amend sem pedir, nunca commitar secrets.', link: { type: 'doc', url: null, docId: 'doc-git', badge: 'Doc 17' } }
+          ]
+        }
+      ]
+    },
+    {
+      id: 'phase4',
+      num: 4,
+      badge: '4',
+      color: 'orange',
+      title: 'Lideranca Tecnica em IA',
+      duration: 'Continuo \u2022 Ser quem toma decisoes de IA na empresa',
+      tip: 'Tech lead nao e so o melhor tecnico. E quem multiplica a capacidade do time. Traduzir possibilidades de IA em solucoes de negocio.',
+      sections: [
+        {
+          title: 'Habilidades de Lideranca',
+          items: [
+            { text: 'Avaliar quando IA resolve vs quando e over-engineering', detail: 'Saber dizer "isso nao precisa de IA" e tao valioso quanto implementar.', link: null },
+            { text: 'Definir metricas de sucesso para projetos de IA', detail: 'KPIs: acuracia, tempo economizado, custo por request.', link: { type: 'ext', url: 'https://github.com/anthropics/courses/tree/master/prompt_evaluations', docId: null, badge: 'Curso 4' } },
+            { text: 'Gerenciar custos de tokens e otimizar budget', detail: 'Doc 10 compara custos entre modelos. Base para decisoes de budget.', link: { type: 'doc', url: null, docId: 'doc-modelos', badge: 'Doc 10' } },
+            { text: 'Documentar prompts e sistemas para o time', detail: null, link: null },
+            { text: 'Criar guidelines de uso de IA para a empresa', detail: 'Use os anti-patterns e principios de comunicacao como base para guidelines internas.', link: { type: 'doc', url: null, docId: 'doc-comunicacao', badge: 'Doc 15' } },
+            { text: 'Apresentar resultados e ROI para stakeholders', detail: '"Economizamos X horas/mes" > "Reduzimos tokens em 30%".', link: null }
+          ]
+        },
+        {
+          title: 'Visao Estrategica',
+          items: [
+            { text: 'Acompanhar lancamentos de novos modelos', detail: null, link: { type: 'ext', url: 'https://www.anthropic.com/research', docId: null, badge: 'Research' } },
+            { text: 'Trade-offs: API vs fine-tuning vs modelo proprio', detail: null, link: { type: 'ext', url: 'https://github.com/anthropics/anthropic-cookbook/blob/main/finetuning/finetuning_on_bedrock.ipynb', docId: null, badge: 'Cookbook' } },
+            { text: 'MCP (Model Context Protocol)', detail: 'Protocolo aberto para conectar LLMs a dados e ferramentas.', link: { type: 'ext', url: 'https://modelcontextprotocol.io/', docId: null, badge: 'MCP Docs' } },
+            { text: 'AI Safety e etica', detail: null, link: { type: 'ext', url: 'https://www.anthropic.com/research', docId: null, badge: 'Research' } },
+            { text: 'Construir roadmap de IA para a empresa', detail: null, link: null },
+            { text: 'Dominar anatomia de system prompts profissionais', detail: 'Usar template de 9 blocos para criar system prompts de producao.', link: { type: 'doc', url: null, docId: 'doc-estrutura', badge: 'Doc 16' } },
+            { text: 'Estudar prompt de produto real (claude.ai)', detail: '23 secoes do prompt do claude.ai — masterclass em design de produto de IA.', link: { type: 'doc', url: null, docId: 'doc-claudeai', badge: 'Doc 23' } },
+            { text: 'Implementar handling de recusas no agente da empresa', detail: 'Recusas com tom conversacional, wellbeing do usuario, feedback honesto.', link: { type: 'doc', url: null, docId: 'doc-recusas', badge: 'Doc 21' } }
+          ]
+        },
+        {
+          title: 'Exercicios Praticos',
+          items: [
+            { text: 'Fazer apresentacao interna sobre IA na empresa', detail: null, link: null },
+            { text: 'Conduzir workshop de prompt engineering para o time', detail: null, link: null },
+            { text: 'Criar documento "AI Decision Framework"', detail: 'Fluxograma: Precisa de IA? -> Qual tipo? -> Qual modelo? -> Custo?', link: null }
+          ]
+        }
+      ]
     }
   ],
   docs: [],
