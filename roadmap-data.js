@@ -1098,5 +1098,158 @@ const ROADMAP_DATA = {
       { text: 'MLOps Community', detail: 'ML/IA em producao. Relevante para fases 3-4.' }
     ],
     tip: 'Use o Claude Code ou chat como tutor particular 24/7 durante seus estudos. Mas valide informacoes criticas com a documentacao oficial.'
-  }
+  },
+
+  faq: [
+    {
+      group: 'O que é o Claude',
+      items: [
+        {
+          q: 'O que é o Claude e o que o diferencia do ChatGPT/Copilot?',
+          a: 'Claude é um assistente de IA desenvolvido pela Anthropic. Principais diferenciais: janela de contexto de 200k tokens (muito maior que concorrentes), foco em segurança e honestidade via Constitutional AI, e melhor desempenho em tarefas longas de código e análise. O Copilot é focado exclusivamente em código e usa GPT da OpenAI. O Claude Code integra diretamente ao VS Code e terminal com acesso ao seu repositório.',
+          link: null
+        },
+        {
+          q: 'Quais são os modelos disponíveis (Opus, Sonnet, Haiku) e quando usar cada um?',
+          a: 'Opus 4: mais capaz e com melhor raciocínio — use para tarefas complexas, arquitetura, análise profunda. Sonnet 4: equilíbrio entre capacidade e velocidade — uso geral, é o padrão do Claude Code. Haiku: mais rápido e econômico — ideal para tarefas simples, repetitivas ou de alto volume.',
+          link: { text: 'Ver Doc 10 — Modelos', type: 'doc', url: null, docId: 'doc-modelos' }
+        },
+        {
+          q: 'O Claude tem acesso à internet?',
+          a: 'Por padrão, não. O Claude responde com base no seu treinamento (cutoff agosto 2025). No Claude Code, ele pode ler arquivos do seu projeto mas não acessa URLs externas sozinho. Existem plugins (como WebSearch) que adicionam essa capacidade quando instalados.',
+          link: null
+        }
+      ]
+    },
+    {
+      group: 'Como usamos aqui',
+      items: [
+        {
+          q: 'Qual a diferença entre a extensão do VS Code, o Claude Code CLI e o Claude.ai?',
+          a: 'Extensão VS Code: interface visual integrada ao editor, mesmas capacidades do Claude Code com painel lateral. Claude Code CLI: ferramenta de linha de comando — mesma tecnologia, preferida para automações e scripts. Claude.ai: interface web da Anthropic, sem acesso direto ao código do projeto nem integração com o ambiente de desenvolvimento.',
+          link: null
+        },
+        {
+          q: 'O que consigo fazer com a extensão do VS Code no dia a dia?',
+          a: 'Explicar e refatorar código selecionado, gerar testes unitários, identificar e corrigir bugs, revisar pull requests, escrever documentação, criar componentes completos a partir de uma descrição, executar comandos no terminal integrado, e editar múltiplos arquivos de uma vez seguindo instruções em linguagem natural.',
+          link: null
+        },
+        {
+          q: 'Casos de uso práticos: o que devs fazem com Claude no trabalho?',
+          a: 'Geração de código boilerplate e CRUD, refatoração de funções legadas, escrita de testes unitários e de integração, análise de stack traces e erros, migração entre tecnologias (ex: JavaScript para TypeScript), revisão de segurança, geração de migrations de banco de dados, documentação automática de APIs, e análise de performance.',
+          link: null
+        }
+      ]
+    },
+    {
+      group: 'Contexto e memória',
+      items: [
+        {
+          q: 'O que é "contexto" no Claude? Por que ele "esquece" coisas?',
+          a: 'Contexto é tudo que está na conversa atual: suas mensagens, respostas do Claude, e arquivos compartilhados. O Claude não tem memória entre sessões por padrão — cada nova conversa começa do zero. Dentro da mesma sessão, ele lembra tudo que foi dito. Para memória persistente, use o sistema de memories do Claude Code.',
+          link: null
+        },
+        {
+          q: 'O que é a janela de contexto e por que ela importa?',
+          a: 'É o limite de tokens que o modelo processa de uma vez — 200k tokens no Claude (equivalente a ~150k palavras ou ~500 páginas). Se a conversa ficar muito longa, tokens antigos podem ser descartados. Isso afeta a qualidade das respostas em sessões longas. Uma estratégia é começar novas sessões para tarefas independentes.',
+          link: { text: 'Ver Doc 10 — Context Window', type: 'doc', url: null, docId: 'doc-modelos' }
+        },
+        {
+          q: 'Como o Claude sabe sobre o meu projeto/codebase?',
+          a: 'Via: (1) arquivos que você abre ou cola no chat, (2) CLAUDE.md na raiz do projeto — lido automaticamente em toda sessão, (3) o sistema de memories que persiste informações entre sessões, e (4) quando você pede ao Claude Code para ler arquivos específicos do repositório.',
+          link: null
+        }
+      ]
+    },
+    {
+      group: 'Arquivos .md e configuração',
+      items: [
+        {
+          q: 'O que são arquivos .md (Markdown)?',
+          a: 'Markdown é um formato de texto simples com marcação leve: # para títulos, **texto** para negrito, `código` para inline code, ``` para blocos de código. É renderizado com formatação em VS Code, GitHub, e interfaces de IA. A maioria dos arquivos de configuração do Claude Code (.md) usa esse formato.',
+          link: null
+        },
+        {
+          q: 'O que é o CLAUDE.md e para que serve?',
+          a: 'É o arquivo de instruções permanentes do Claude Code, na raiz do projeto. Define regras que valem em toda sessão: idioma de resposta, convenções de código do projeto, comportamentos proibidos, contexto do negócio. É o equivalente a um "briefing" que o Claude lê automaticamente antes de qualquer conversa.',
+          link: null
+        },
+        {
+          q: 'O que posso configurar no Claude Code?',
+          a: 'Permissões de ferramentas (quais comandos o Claude pode executar sem pedir aprovação), modelo padrão por projeto, modo de aprovação de ações (automático, manual, ou misto), hooks (scripts que rodam antes/depois de determinadas ações), e regras de comportamento via CLAUDE.md.',
+          link: null
+        },
+        {
+          q: 'O que são as memories e como funcionam?',
+          a: 'São anotações persistentes que o Claude salva entre sessões — informações sobre você, preferências, contexto do projeto. Ficam em arquivos .md na pasta .claude/projects/ do sistema. O Claude lê essas memórias no início de cada sessão e as usa para personalizar as respostas sem você precisar repetir o contexto.',
+          link: null
+        }
+      ]
+    },
+    {
+      group: 'Como usar bem',
+      items: [
+        {
+          q: 'Como escrever prompts eficientes?',
+          a: 'Seja direto: diga o que quer fazer, não o que não quer. Dê contexto: qual arquivo, qual função, qual problema específico. Use exemplos quando o formato da resposta importa. Quebre tarefas complexas em etapas menores. Prefira instruções positivas ("faça X") a negativas ("não faça Y").',
+          link: { text: 'Ver Doc 1 — Clareza', type: 'doc', url: null, docId: 'doc-clareza' }
+        },
+        {
+          q: 'Quais os erros mais comuns ao usar o Claude?',
+          a: 'Prompts vagos ("melhore isso", "corrija o código"), pedir muitas coisas de uma vez, não dar contexto suficiente sobre o projeto, aceitar a primeira resposta sem revisar, e usar código gerado em produção sem testar. O Claude pode alucinar detalhes — sempre valide saídas críticas.',
+          link: null
+        },
+        {
+          q: 'Como obter respostas mais consistentes e precisas?',
+          a: 'Defina o formato esperado (JSON, lista, código com tipos). Peça para raciocinar passo a passo em tarefas complexas. Use exemplos de entrada e saída desejada. Itere: peça ajustes incrementais em vez de reescrever o prompt do zero. Em casos de dúvida, peça ao Claude para explicar o raciocínio.',
+          link: { text: 'Ver Doc 4 — Chain-of-Thought', type: 'doc', url: null, docId: 'doc-cot' }
+        }
+      ]
+    },
+    {
+      group: 'Skills e Plugins',
+      items: [
+        {
+          q: 'O que são Skills?',
+          a: 'Skills são instruções especializadas que ensinam o Claude a seguir um workflow específico. Exemplo: a skill "brainstorming" define um processo de exploração antes de implementar; a skill "tdd" define como escrever testes antes do código. São arquivos .md com passos, regras e checklists que o Claude segue.',
+          link: null
+        },
+        {
+          q: 'O que são Plugins?',
+          a: 'Plugins são pacotes que estendem as capacidades do Claude Code. Um plugin pode adicionar novas ferramentas (ex: integração com Figma, Slack, Linear), novas skills para um domínio específico (ex: conjunto de skills para desenvolvimento frontend), ou ambos. São instalados na pasta .claude/plugins/.',
+          link: null
+        },
+        {
+          q: 'Qual a diferença entre Skills e Plugins?',
+          a: 'Plugin é o pacote instalável — contém metadados, ferramentas e/ou skills. Skill é o workflow especializado que vem dentro de um plugin (ou que você cria manualmente). Um plugin pode conter várias skills. Você também pode criar skills sem plugin, colocando um arquivo .md na pasta correta.',
+          link: null
+        },
+        {
+          q: 'Como instalo ou uso uma skill/plugin?',
+          a: 'Plugins: instale via marketplace do Claude Code ou manualmente copiando para .claude/plugins/. Skills: invoque com /nome-da-skill no chat, ou o Claude as aciona automaticamente quando o contexto é relevante. Skills de sistema (como brainstorming) são invocadas automaticamente antes de tarefas de implementação.',
+          link: null
+        }
+      ]
+    },
+    {
+      group: 'Limites e segurança',
+      items: [
+        {
+          q: 'Posso integrar o Claude nos sistemas da empresa?',
+          a: 'Sim, via API da Anthropic. Você envia um prompt por HTTP e recebe a resposta como JSON. É possível criar chatbots internos, automações, análise de documentos, geração de relatórios — qualquer fluxo que envolva processamento de texto. O SDK oficial existe para Python, TypeScript e outras linguagens.',
+          link: null
+        },
+        {
+          q: 'O Claude é seguro para dados sensíveis do projeto?',
+          a: 'Dados enviados à API são processados nos servidores da Anthropic. Para uso com dados sensíveis (PII, credenciais, propriedade intelectual), verifique os termos de uso e considere um plano enterprise com garantias de privacidade e data retention policy. Regra prática: nunca envie senhas, tokens de acesso ou dados pessoais de clientes.',
+          link: null
+        },
+        {
+          q: 'Quais são os limites do Claude? O que ele não faz bem?',
+          a: 'Não acessa a internet por padrão, pode inventar fatos específicos (alucinação), tem dificuldade com matemática complexa, não executa código por conta própria (depende de ferramentas), pode perder coerência em respostas muito longas, e não tem memória entre sessões por padrão. Sempre revise saídas críticas.',
+          link: null
+        }
+      ]
+    }
+  ]
 };
