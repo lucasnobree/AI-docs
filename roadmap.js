@@ -182,6 +182,261 @@ function buildGlossary() {
 }
 
 
+// ============================================================
+// MINIGAMES (inline per phase)
+// ============================================================
+const GAME_STORAGE = 'ai-roadmap-game-scores';
+
+function shuffle(arr) {
+  const a = [...arr];
+  for (let i = a.length - 1; i > 0; i--) {
+    const j = Math.floor(Math.random() * (i + 1));
+    [a[i], a[j]] = [a[j], a[i]];
+  }
+  return a;
+}
+
+function buildPhaseReviews() {
+  const review = ROADMAP_DATA.phaseReview;
+  if (!review) return;
+  const scores = JSON.parse(localStorage.getItem(GAME_STORAGE) || '{}');
+
+  Object.keys(review).forEach(phaseId => {
+    const phase = review[phaseId];
+    const el = document.getElementById(phaseId);
+    if (!el) return;
+
+    const section = document.createElement('div');
+    section.className = 'section review-section';
+    section.innerHTML = `
+      <h3 style="display:flex;align-items:center;gap:0.5rem;">\uD83C\uDFAE ${phase.title}</h3>
+      <p style="color:var(--text-muted);font-size:0.85rem;margin-bottom:1rem;">Teste o que aprendeu nesta fase com exercicios interativos.</p>
+      <div class="minigame-grid" id="mg-grid-${phaseId}">
+        ${phase.games.map(g => {
+          const best = scores[g.id] != null ? scores[g.id] + '%' : 'Nao jogado';
+          return `<div class="minigame-card" onclick="startPhaseGame('${phaseId}','${g.id}')">
+            <div class="mg-icon">${g.icon}</div>
+            <div class="mg-title">${g.title}</div>
+            <div class="mg-score">Melhor: ${best}</div>
+          </div>`;
+        }).join('')}
+      </div>
+      <div id="mg-area-${phaseId}"></div>`;
+    el.appendChild(section);
+  });
+}
+
+function startPhaseGame(phaseId, gameId) {
+  const review = ROADMAP_DATA.phaseReview[phaseId];
+  const game = review.games.find(g => g.id === gameId);
+  if (!game) return;
+  const grid = document.getElementById('mg-grid-' + phaseId);
+  const area = document.getElementById('mg-area-' + phaseId);
+  grid.style.display = 'none';
+
+  if (game.type === 'quiz') runQuiz(game, area, phaseId);
+  else if (game.type === 'prompt-fix') runPromptFix(game, area, phaseId);
+  else if (game.type === 'token-estimate') runTokenEstimate(game, area, phaseId);
+  else if (game.type === 'scenarios') runScenarios(game, area, phaseId);
+}
+
+function exitPhaseGame(phaseId) {
+  document.getElementById('mg-grid-' + phaseId).style.display = '';
+  document.getElementById('mg-area-' + phaseId).innerHTML = '';
+  // Refresh scores on cards
+  const scores = JSON.parse(localStorage.getItem(GAME_STORAGE) || '{}');
+  document.querySelectorAll('#mg-grid-' + phaseId + ' .mg-score').forEach(el => {
+    const card = el.closest('.minigame-card');
+    const gameId = card.getAttribute('onclick').match(/'([^']+)'\)$/)[1];
+    el.textContent = 'Melhor: ' + (scores[gameId] != null ? scores[gameId] + '%' : 'Nao jogado');
+  });
+}
+
+function saveGameScore(gameId, score, total) {
+  const pct = Math.round((score / total) * 100);
+  const scores = JSON.parse(localStorage.getItem(GAME_STORAGE) || '{}');
+  if (!scores[gameId] || pct > scores[gameId]) {
+    scores[gameId] = pct;
+    localStorage.setItem(GAME_STORAGE, JSON.stringify(scores));
+  }
+  return pct;
+}
+
+function showGameResult(gameId, score, total, area, phaseId) {
+  const pct = saveGameScore(gameId, score, total);
+  const emoji = pct === 100 ? '\uD83C\uDF1F' : pct >= 70 ? '\uD83D\uDCAA' : '\uD83D\uDCDA';
+  const msg = pct === 100 ? 'Perfeito! Voce dominou esta fase.' : pct >= 70 ? 'Otimo resultado! Revise os pontos que errou.' : 'Continue estudando e tente novamente!';
+  area.innerHTML = `
+    <div class="mg-result">
+      <div style="font-size:2rem;margin-bottom:0.5rem;">${emoji}</div>
+      <div class="mg-score-big">${pct}%</div>
+      <div class="mg-score-label">${score} de ${total} corretas</div>
+      <div style="color:var(--text-muted);font-size:0.85rem;margin-top:0.5rem;">${msg}</div>
+      <br>
+      <button class="mg-back-btn" onclick="exitPhaseGame('${phaseId}')">Voltar</button>
+    </div>`;
+}
+
+// Quiz engine
+function runQuiz(game, area, phaseId) {
+  const items = shuffle(game.questions);
+  let current = 0, score = 0;
+
+  function render() {
+    if (current >= items.length) { showGameResult(game.id, score, items.length, area, phaseId); return; }
+    const item = items[current];
+    area.innerHTML = `
+      <div class="mg-question-box">
+        <div class="mg-progress-text">Pergunta ${current + 1} de ${items.length}</div>
+        <div class="progress-bar" style="margin-bottom:1rem;"><div class="fill" style="width:${(current/items.length)*100}%"></div></div>
+        <h3>${item.q}</h3>
+        ${item.options.map((opt, i) => `<button class="mg-option" data-idx="${i}">${opt}</button>`).join('')}
+        <div class="mg-explanation" id="mg-expl-${phaseId}">${item.explanation}</div>
+        <button class="mg-next-btn" id="mg-next-${phaseId}">${current < items.length - 1 ? 'Proxima \u2192' : 'Ver resultado'}</button>
+      </div>`;
+    area.querySelectorAll('.mg-option').forEach(btn => {
+      btn.addEventListener('click', function() {
+        const chosen = parseInt(this.dataset.idx);
+        area.querySelectorAll('.mg-option').forEach(o => o.disabled = true);
+        area.querySelectorAll('.mg-option')[item.correct].classList.add('correct');
+        if (chosen !== item.correct) this.classList.add('wrong');
+        else score++;
+        document.getElementById('mg-expl-' + phaseId).classList.add('visible');
+        document.getElementById('mg-next-' + phaseId).classList.add('visible');
+      });
+    });
+    document.getElementById('mg-next-' + phaseId).addEventListener('click', function() { current++; render(); });
+  }
+  render();
+}
+
+// Scenarios engine (same as quiz but with scenario text)
+function runScenarios(game, area, phaseId) {
+  const items = shuffle(game.scenarios);
+  let current = 0, score = 0;
+
+  function render() {
+    if (current >= items.length) { showGameResult(game.id, score, items.length, area, phaseId); return; }
+    const item = items[current];
+    area.innerHTML = `
+      <div class="mg-question-box">
+        <div class="mg-progress-text">Cenario ${current + 1} de ${items.length}</div>
+        <div class="progress-bar" style="margin-bottom:1rem;"><div class="fill" style="width:${(current/items.length)*100}%"></div></div>
+        <h3>${item.scenario}</h3>
+        ${item.options.map((opt, i) => `<button class="mg-option" data-idx="${i}">${opt}</button>`).join('')}
+        <div class="mg-explanation" id="mg-expl-${phaseId}">${item.explanation}</div>
+        <button class="mg-next-btn" id="mg-next-${phaseId}">${current < items.length - 1 ? 'Proxima \u2192' : 'Ver resultado'}</button>
+      </div>`;
+    area.querySelectorAll('.mg-option').forEach(btn => {
+      btn.addEventListener('click', function() {
+        const chosen = parseInt(this.dataset.idx);
+        area.querySelectorAll('.mg-option').forEach(o => o.disabled = true);
+        area.querySelectorAll('.mg-option')[item.correct].classList.add('correct');
+        if (chosen !== item.correct) this.classList.add('wrong');
+        else score++;
+        document.getElementById('mg-expl-' + phaseId).classList.add('visible');
+        document.getElementById('mg-next-' + phaseId).classList.add('visible');
+      });
+    });
+    document.getElementById('mg-next-' + phaseId).addEventListener('click', function() { current++; render(); });
+  }
+  render();
+}
+
+// Prompt Fix engine
+function runPromptFix(game, area, phaseId) {
+  const items = shuffle(game.challenges);
+  let current = 0, score = 0;
+
+  function render() {
+    if (current >= items.length) { showGameResult(game.id, score, items.length, area, phaseId); return; }
+    const item = items[current];
+    const shuffledOpts = shuffle(item.options.map((opt, i) => ({ opt, origIdx: i })));
+    area.innerHTML = `
+      <div class="mg-question-box">
+        <div class="mg-progress-text">Desafio ${current + 1} de ${items.length}</div>
+        <div class="progress-bar" style="margin-bottom:1rem;"><div class="fill" style="width:${(current/items.length)*100}%"></div></div>
+        <div class="mg-bad-label">Prompt com problema:</div>
+        <div class="mg-bad-prompt">${item.bad}</div>
+        <h3>Qual e a melhor versao corrigida?</h3>
+        ${shuffledOpts.map(o => `<button class="mg-option" data-orig="${o.origIdx}" style="white-space:pre-wrap;font-size:0.82rem;">${o.opt}</button>`).join('')}
+        <div class="mg-explanation" id="mg-expl-${phaseId}">${item.principle}</div>
+        <button class="mg-next-btn" id="mg-next-${phaseId}">${current < items.length - 1 ? 'Proxima \u2192' : 'Ver resultado'}</button>
+      </div>`;
+    area.querySelectorAll('.mg-option').forEach(btn => {
+      btn.addEventListener('click', function() {
+        const chosen = parseInt(this.dataset.orig);
+        area.querySelectorAll('.mg-option').forEach(o => {
+          o.disabled = true;
+          if (parseInt(o.dataset.orig) === item.correct) o.classList.add('correct');
+        });
+        if (chosen !== item.correct) this.classList.add('wrong');
+        else score++;
+        document.getElementById('mg-expl-' + phaseId).classList.add('visible');
+        document.getElementById('mg-next-' + phaseId).classList.add('visible');
+      });
+    });
+    document.getElementById('mg-next-' + phaseId).addEventListener('click', function() { current++; render(); });
+  }
+  render();
+}
+
+// Token Estimate engine
+function runTokenEstimate(game, area, phaseId) {
+  const items = shuffle(game.snippets);
+  let current = 0, score = 0;
+
+  function render() {
+    if (current >= items.length) { showGameResult(game.id, score, items.length, area, phaseId); return; }
+    const item = items[current];
+    area.innerHTML = `
+      <div class="mg-question-box">
+        <div class="mg-progress-text">Texto ${current + 1} de ${items.length}</div>
+        <div class="progress-bar" style="margin-bottom:1rem;"><div class="fill" style="width:${(current/items.length)*100}%"></div></div>
+        <h3>Quantos tokens este texto consome?</h3>
+        <div class="mg-token-text">${item.text}</div>
+        <div style="display:flex;align-items:center;gap:0.5rem;flex-wrap:wrap;">
+          <input type="number" class="mg-token-input" id="mg-guess-${phaseId}" min="1" max="999" placeholder="?">
+          <button class="mg-submit-btn" id="mg-submit-${phaseId}">Verificar</button>
+          <span id="mg-feedback-${phaseId}" style="font-size:0.85rem;font-weight:600;"></span>
+        </div>
+        <div class="mg-explanation" id="mg-expl-${phaseId}"></div>
+        <button class="mg-next-btn" id="mg-next-${phaseId}">${current < items.length - 1 ? 'Proxima \u2192' : 'Ver resultado'}</button>
+      </div>`;
+    const guessEl = document.getElementById('mg-guess-' + phaseId);
+    guessEl.focus();
+    guessEl.addEventListener('keydown', function(e) {
+      if (e.key === 'Enter') document.getElementById('mg-submit-' + phaseId).click();
+    });
+    document.getElementById('mg-submit-' + phaseId).addEventListener('click', function() {
+      const guess = parseInt(guessEl.value);
+      if (isNaN(guess) || guess < 1) return;
+      this.disabled = true;
+      guessEl.disabled = true;
+      const diff = Math.abs(guess - item.tokens) / item.tokens;
+      const fb = document.getElementById('mg-feedback-' + phaseId);
+      if (diff <= 0.2) {
+        score++;
+        fb.textContent = '\u2705 Acertou! Resposta: ' + item.tokens + ' tokens';
+        fb.style.color = 'var(--green)';
+      } else if (diff <= 0.5) {
+        score += 0.5;
+        fb.textContent = '\u223C Quase! Resposta: ' + item.tokens + ' tokens';
+        fb.style.color = 'var(--yellow)';
+      } else {
+        fb.textContent = '\u274C Resposta: ' + item.tokens + ' tokens (voce chutou ' + guess + ')';
+        fb.style.color = 'var(--red)';
+      }
+      const tip = guess < item.tokens ? 'Dica: ~4 chars/token em ingles, ~2-3 em portugues. Pontuacao e espacos tambem contam.' : 'Dica: subpalavras comuns (pre, ing, tion) costumam ser 1 token.';
+      document.getElementById('mg-expl-' + phaseId).textContent = tip;
+      document.getElementById('mg-expl-' + phaseId).classList.add('visible');
+      document.getElementById('mg-next-' + phaseId).classList.add('visible');
+    });
+    document.getElementById('mg-next-' + phaseId).addEventListener('click', function() { current++; render(); });
+  }
+  render();
+}
+
 function buildFaq() {
   const container = document.getElementById('faq');
 
@@ -310,9 +565,14 @@ function showPhase(id, btn) {
   }
 
   function updateStats() {
-    const checkboxes = document.querySelectorAll('.checklist input[type="checkbox"]');
+    const phase4Hidden = document.getElementById('tab-phase4') && document.getElementById('tab-phase4').style.display === 'none';
+    const excludeSelector = phase4Hidden ? ':not(#phase4 .checklist input)' : '';
+    const allCheckboxes = document.querySelectorAll('.checklist input[type="checkbox"]');
+    const checkboxes = phase4Hidden
+      ? Array.from(allCheckboxes).filter(cb => !cb.closest('#phase4'))
+      : Array.from(allCheckboxes);
     const total = checkboxes.length;
-    const done = Array.from(checkboxes).filter(cb => cb.checked).length;
+    const done = checkboxes.filter(cb => cb.checked).length;
     const percent = total > 0 ? Math.round((done / total) * 100) : 0;
     document.getElementById('statTotal').textContent = total;
     document.getElementById('statDone').textContent = done;
@@ -475,15 +735,44 @@ function showPhase(id, btn) {
   }
 
 // ============================================================
+// EASTER EGG — Fase 4 (hidden by default)
+// ============================================================
+const LEAD_KEY = 'ai-roadmap-lead-mode';
+
+function unlockPhase4() {
+  const tab = document.getElementById('tab-phase4');
+  if (tab) tab.style.display = '';
+  localStorage.setItem(LEAD_KEY, '1');
+}
+
+(function() {
+  let buffer = '';
+  document.addEventListener('keydown', function(e) {
+    if (e.target.tagName === 'INPUT' || e.target.tagName === 'TEXTAREA') return;
+    buffer += e.key.toLowerCase();
+    if (buffer.length > 10) buffer = buffer.slice(-10);
+    if (buffer.includes('lead')) {
+      buffer = '';
+      if (document.getElementById('tab-phase4').style.display === 'none') {
+        unlockPhase4();
+      }
+    }
+  });
+})();
+
+// ============================================================
 // INIT
 // ============================================================
-// DOMContentLoaded is more robust than inline execution at end of <body>
 document.addEventListener('DOMContentLoaded', () => {
   buildPhases();
   buildDocs();
   buildResources();
   buildGlossary();
   buildFaq();           // FAQ: sem checkboxes, nao afeta indice do localStorage
+  buildPhaseReviews();  // AFTER buildPhases — appends review sections to phase divs
   loadProgress();       // AFTER buildPhases/buildDocs — needs checkboxes in DOM
   buildDocChecklists(); // AFTER buildPhases/buildDocs — uses querySelector on phases
+
+  // Restore easter egg
+  if (localStorage.getItem(LEAD_KEY) === '1') unlockPhase4();
 });

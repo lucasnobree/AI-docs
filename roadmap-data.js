@@ -1258,5 +1258,139 @@ const ROADMAP_DATA = {
         }
       ]
     }
-  ]
+  ],
+  phaseReview: {
+    phase1: {
+      title: 'Revisao: Fundamentos de LLMs',
+      games: [
+        {
+          id: 'phase1-quiz',
+          type: 'quiz',
+          title: 'Quiz de Fundamentos',
+          icon: '\u26A1',
+          questions: [
+            { q: 'O que significa "Temperature 0" em um LLM?', options: ['Resposta aleatoria', 'Resposta deterministica', 'Modelo desligado', 'Maximo de tokens'], correct: 1, explanation: 'Temperatura 0 = deterministico. O modelo sempre escolhe o token mais provavel.' },
+            { q: 'Qual a janela de contexto do Claude?', options: ['4k tokens', '32k tokens', '128k tokens', '200k tokens'], correct: 3, explanation: 'Claude suporta 200k tokens de contexto por interacao.' },
+            { q: 'O que e "alucinacao" em LLMs?', options: ['Bug no servidor', 'Texto estatisticamente provavel mas factualmente incorreto', 'Erro de sintaxe', 'Limite de tokens atingido'], correct: 1, explanation: 'O modelo gera texto provavel, nao verificado. Parece correto mas pode ser inventado.' },
+            { q: 'Qual a diferenca entre System Prompt e User Prompt?', options: ['Nao ha diferenca', 'System define o comportamento base, User e a entrada', 'User e mais importante', 'System e opcional e ignorado'], correct: 1, explanation: 'System prompt define personalidade e regras. User prompt e a mensagem do usuario.' },
+            { q: 'Tokens de output custam mais que tokens de input?', options: ['Sim, geralmente custam mais', 'Nao, o preco e igual', 'Nao, input custa mais', 'Depende do horario'], correct: 0, explanation: 'Na maioria das APIs, tokens de output sao mais caros que tokens de input.' },
+            { q: 'Qual modelo Claude e o mais rapido e economico?', options: ['Opus', 'Sonnet', 'Haiku', 'Todos iguais'], correct: 2, explanation: 'Haiku e o modelo mais rapido e economico, ideal para tarefas simples e alto volume.' },
+            { q: 'O que e Top-p (nucleus sampling)?', options: ['Numero maximo de tokens', 'Controla diversidade limitando a probabilidade cumulativa', 'Quantidade de exemplos no prompt', 'Taxa de aprendizado'], correct: 1, explanation: 'Top-p filtra tokens ate atingir uma probabilidade cumulativa p, controlando criatividade.' },
+            { q: 'Quantos caracteres em ingles equivalem aproximadamente a 1 token?', options: ['1 caractere', '~4 caracteres', '10 caracteres', '1 palavra inteira sempre'], correct: 1, explanation: 'Em media, 1 token equivale a ~4 caracteres em ingles e ~2-3 em portugues.' }
+          ]
+        },
+        {
+          id: 'phase1-tokens',
+          type: 'token-estimate',
+          title: 'Estimador de Tokens',
+          icon: '\uD83C\uDFAF',
+          snippets: [
+            { text: 'Hello, how are you today?', tokens: 6 },
+            { text: 'Crie um resumo executivo em JSON.', tokens: 12 },
+            { text: 'The quick brown fox jumps over the lazy dog.', tokens: 10 },
+            { text: 'Voce e um engenheiro de software senior especializado em Python e arquitetura de microsservicos.', tokens: 28 },
+            { text: 'function fibonacci(n) { return n <= 1 ? n : fibonacci(n-1) + fibonacci(n-2); }', tokens: 25 },
+            { text: 'Explique o conceito de recursao para uma crianca de 10 anos usando analogias do dia a dia.', tokens: 26 },
+            { text: 'SELECT u.name, COUNT(o.id) FROM users u LEFT JOIN orders o ON u.id = o.user_id GROUP BY u.name;', tokens: 30 },
+            { text: 'A inteligencia artificial generativa utiliza redes neurais transformer para gerar conteudo original a partir de padroes aprendidos durante o treinamento.', tokens: 42 },
+            { text: '{ "nome": "Maria", "idade": 28, "skills": ["Python", "SQL", "Claude API"] }', tokens: 28 },
+            { text: 'Passo 1: Leia o documento. Passo 2: Identifique os pontos-chave. Passo 3: Gere um resumo de 3 paragrafos.', tokens: 35 }
+          ]
+        }
+      ]
+    },
+    phase2: {
+      title: 'Revisao: Prompt Engineering',
+      games: [
+        {
+          id: 'phase2-fix',
+          type: 'prompt-fix',
+          title: 'Conserte o Prompt',
+          icon: '\uD83D\uDD27',
+          challenges: [
+            { bad: 'Me fala sobre coisas de programacao e tenta ser util', options: ['Explique os 3 principais paradigmas de programacao (OOP, funcional, procedural) com um exemplo de codigo em Python para cada.', 'Fale tudo sobre programacao que voce sabe.', 'Seja util e me ajude com programacao.'], correct: 0, principle: 'Instrucoes especificas e objetivas > vagas e genericas (Doc 1)' },
+            { bad: 'Nao use jargao tecnico. Nao escreva mais de 5 paragrafos. Nao comece com "Claro!". Nao use listas.', options: ['Escreva em linguagem acessivel, em ate 5 paragrafos, em prosa corrida, comecando direto pelo conteudo.', 'Nao faca nada errado e escreva bonito.', 'Escreva sem erros e de forma perfeita por favor.'], correct: 0, principle: 'Instrucoes positivas (o que fazer) > negativas (o que nao fazer) (Doc 1)' },
+            { bad: 'Analise este dado: [dado]. Agora faca um grafico. Tambem escreva um relatorio. E sugira melhorias.', options: ['Passo 1: Analise os dados e identifique tendencias. Passo 2: Descreva as tendencias em formato de relatorio. Passo 3: Liste 3 sugestoes de melhoria baseadas na analise.', 'Faca tudo de uma vez e me de o resultado final.', 'Analise os dados e faca o que achar melhor.'], correct: 0, principle: 'Tarefas complexas devem ser quebradas em passos sequenciais (Doc 4)' },
+            { bad: 'Voce e um assistente. Responda perguntas.', options: ['Voce e um engenheiro de dados senior com 10 anos de experiencia em PostgreSQL. Responda perguntas tecnicas com exemplos de SQL, priorizando performance e boas praticas.', 'Voce e muito inteligente. Responda tudo certo.', 'Seja um especialista e de boas respostas.'], correct: 0, principle: 'Role prompting com contexto especifico melhora a qualidade (Doc 3)' },
+            { bad: 'resuma isso: [texto de 3 paginas colado sem formatacao]', options: ['<documento>\n[texto aqui]\n</documento>\n\nResuma o documento acima em 3 bullet points focando em: decisoes tomadas, riscos identificados e proximos passos.', 'Resuma o texto acima de alguma forma boa.', 'Me da o resumo disso ai.'], correct: 0, principle: 'Use XML tags para delimitar dados e seja especifico no formato de saida (Doc 2)' },
+            { bad: 'Me da a resposta certa para este problema de logica.', options: ['Resolva este problema de logica. Primeiro, identifique as premissas. Depois, raciocine passo a passo. Por fim, apresente a conclusao.', 'Pense bastante e me da a resposta correta.', 'Use inteligencia artificial para resolver isso.'], correct: 0, principle: 'Chain-of-Thought explicito melhora raciocinio (Doc 4)' },
+            { bad: 'Traduza este texto. E tambem corrija a gramatica. Ah, e mude o tom para formal.', options: ['Realize as seguintes tarefas em ordem:\n1. Traduza o texto para portugues\n2. Corrija erros gramaticais na traducao\n3. Ajuste o tom para registro formal\n\n<texto>[texto aqui]</texto>', 'Faca traducao, correcao e formalizacao ao mesmo tempo.', 'Melhore este texto em todos os sentidos possiveis.'], correct: 0, principle: 'Separe tarefas multiplas em instrucoes numeradas e ordenadas (Doc 1)' },
+            { bad: 'Gere um JSON com os dados.', options: ['Gere um JSON com a seguinte estrutura:\n{\n  "nome": string,\n  "idade": number,\n  "ativo": boolean\n}\nRetorne APENAS o JSON, sem texto adicional.', 'Me da um JSON bom com os dados certos.', 'Faca um JSON ai.'], correct: 0, principle: 'Especifique o schema esperado e restricoes de formato (Doc 5)' }
+          ]
+        },
+        {
+          id: 'phase2-quiz',
+          type: 'quiz',
+          title: 'Quiz de Tecnicas',
+          icon: '\u26A1',
+          questions: [
+            { q: 'O que e Few-shot Prompting?', options: ['Pedir ao modelo que pense passo a passo', 'Incluir exemplos no prompt para guiar o modelo', 'Usar temperatura baixa', 'Fazer multiplas chamadas a API'], correct: 1, explanation: 'Few-shot usa 2-5 exemplos no prompt para demonstrar o formato e comportamento esperado.' },
+            { q: 'O que e Chain-of-Thought (CoT)?', options: ['Encadear multiplos modelos', 'Pedir ao modelo que raciocine passo a passo', 'Usar memoria entre sessoes', 'Dividir texto em chunks'], correct: 1, explanation: 'CoT faz o modelo explicitar o raciocinio, melhorando resultados em tarefas complexas.' },
+            { q: 'Para que servem XML tags em prompts?', options: ['Formatar a saida como HTML', 'Delimitar e organizar secoes de dados no prompt', 'Comprimir o texto', 'Sao obrigatorias na API'], correct: 1, explanation: 'XML tags como <documento> ajudam a separar instrucoes de dados, melhorando a clareza.' },
+            { q: 'Quando usar instrucoes positivas ao inves de negativas?', options: ['Nunca, negativas sao melhores', 'Sempre — diga o que fazer, nao o que nao fazer', 'Apenas em few-shot', 'Apenas com temperatura 0'], correct: 1, explanation: 'Instrucoes positivas sao mais claras. "Escreva em 3 paragrafos" > "Nao escreva mais de 3 paragrafos".' },
+            { q: 'O que e Structured Output?', options: ['Qualquer resposta do modelo', 'Forcar resposta em schema definido (ex: JSON)', 'Texto formatado em Markdown', 'Output com mais de 1000 tokens'], correct: 1, explanation: 'Structured Output garante que a resposta siga um schema especifico, ideal para integracoes.' },
+            { q: 'O que e um System Prompt de producao?', options: ['Qualquer prompt do usuario', 'Prompt estruturado com regras, persona e restricoes para uso em apps reais', 'Prompt que so funciona no servidor', 'Prompt com mais de 1000 tokens'], correct: 1, explanation: 'System prompts de producao sao cuidadosamente estruturados com blocos como persona, regras, formato e restricoes.' }
+          ]
+        }
+      ]
+    },
+    phase3: {
+      title: 'Revisao: Agentes & Sistemas',
+      games: [
+        {
+          id: 'phase3-scenarios',
+          type: 'scenarios',
+          title: 'Qual Tecnica Usar?',
+          icon: '\uD83E\uDDE9',
+          scenarios: [
+            { scenario: 'Voce precisa classificar emails como spam ou nao-spam, e tem 5 emails ja classificados como exemplo.', options: ['Zero-shot', 'Few-shot', 'Chain-of-Thought', 'RAG'], correct: 1, explanation: 'Com exemplos disponiveis, few-shot e ideal para classificacao.' },
+            { scenario: 'O modelo precisa resolver um problema de matematica complexo com multiplas etapas.', options: ['Zero-shot', 'Few-shot', 'Chain-of-Thought', 'Tool Use'], correct: 2, explanation: 'Chain-of-Thought faz o modelo explicitar cada passo do raciocinio.' },
+            { scenario: 'Voce quer que o modelo responda perguntas sobre documentos internos da empresa que nao estavam no treinamento.', options: ['Few-shot', 'Fine-tuning', 'RAG', 'Temperatura alta'], correct: 2, explanation: 'RAG busca documentos relevantes e injeta no contexto, ideal para dados proprios.' },
+            { scenario: 'O modelo precisa consultar um banco de dados para responder a pergunta do usuario.', options: ['Chain-of-Thought', 'Tool Use / Function Calling', 'Few-shot', 'System Prompt'], correct: 1, explanation: 'Tool Use permite que o modelo invoque funcoes como consultas SQL.' },
+            { scenario: 'Voce quer que o modelo gere uma resposta em formato JSON rigido para integracao com uma API.', options: ['Few-shot', 'Structured Output', 'Chain-of-Thought', 'Temperatura 0'], correct: 1, explanation: 'Structured Output forca o schema de saida, garantindo formato valido para APIs.' },
+            { scenario: 'O modelo precisa analisar um documento de 50 paginas e responder perguntas sobre ele.', options: ['Few-shot', 'Chain-of-Thought', 'Contexto longo (long context)', 'Temperatura alta'], correct: 2, explanation: 'Claude suporta 200k tokens — documentos longos cabem no contexto sem precisar de RAG.' },
+            { scenario: 'Voce quer que o modelo assuma a persona de um advogado tributarista para responder perguntas de clientes.', options: ['Role Prompting', 'RAG', 'Few-shot', 'Tool Use'], correct: 0, explanation: 'Role prompting define a persona e expertise no system prompt.' },
+            { scenario: 'O modelo precisa executar uma tarefa complexa autonomamente: ler arquivos, editar codigo, rodar testes.', options: ['Chain-of-Thought', 'Few-shot', 'Agente (ReAct pattern)', 'Zero-shot'], correct: 2, explanation: 'Agentes combinam raciocinio e acoes em loop para executar tarefas multi-step.' },
+            { scenario: 'Voce precisa que o modelo traduza textos, mas nunca viu como ele traduz. Nao tem exemplos.', options: ['Zero-shot', 'Few-shot', 'RAG', 'Fine-tuning'], correct: 0, explanation: 'Sem exemplos disponiveis, zero-shot com instrucoes claras e o caminho.' },
+            { scenario: 'Voce quer melhorar a qualidade das respostas do modelo para um dominio especifico, mas nao pode mudar o prompt a cada chamada.', options: ['Few-shot', 'System Prompt detalhado', 'Temperatura 0', 'RAG'], correct: 1, explanation: 'Um system prompt bem estruturado define comportamento consistente sem alterar o prompt do usuario.' }
+          ]
+        },
+        {
+          id: 'phase3-quiz',
+          type: 'quiz',
+          title: 'Quiz de Agentes',
+          icon: '\u26A1',
+          questions: [
+            { q: 'O que e Tool Use / Function Calling?', options: ['Usar ferramentas externas ao modelo', 'Dar "ferramentas" ao modelo para ele invocar', 'Programar o modelo em Python', 'Treinar o modelo com novos dados'], correct: 1, explanation: 'Tool Use permite que o modelo chame funcoes definidas por voce durante a conversa.' },
+            { q: 'O que e o ReAct Pattern em agentes?', options: ['Framework de frontend', 'Padrao de Reasoning + Acting em loop', 'Biblioteca de testes', 'Protocolo de rede'], correct: 1, explanation: 'ReAct combina raciocinio (Reasoning) com acoes (Acting) em um ciclo iterativo.' },
+            { q: 'O que e MCP (Model Context Protocol)?', options: ['Protocolo de rede', 'Protocolo aberto para conectar LLMs a dados e ferramentas', 'Formato de arquivo', 'Metodo de compressao'], correct: 1, explanation: 'MCP e um protocolo aberto que permite LLMs acessarem ferramentas e dados externos de forma padronizada.' },
+            { q: 'O que e RAG (Retrieval-Augmented Generation)?', options: ['Treinar o modelo do zero', 'Buscar informacao externa e injetar no prompt', 'Gerar imagens com IA', 'Comprimir o contexto'], correct: 1, explanation: 'RAG busca dados relevantes (banco, docs) e os injeta no prompt antes de gerar a resposta.' },
+            { q: 'Qual a diferenca entre Fork e Sub-agente?', options: ['Sao a mesma coisa', 'Fork herda o contexto, sub-agente e especializado e independente', 'Sub-agente e mais rapido', 'Fork e para Python, sub-agente para JS'], correct: 1, explanation: 'Fork herda o contexto completo do agente pai. Sub-agente recebe apenas instrucoes especificas.' },
+            { q: 'O que e orquestracao de agentes?', options: ['Tocar musica com IA', 'Coordenar multiplos agentes para resolver tarefas complexas', 'Um tipo de fine-tuning', 'Compressao de contexto'], correct: 1, explanation: 'Orquestracao coordena multiplos agentes (orchestrator-workers) para dividir e conquistar tarefas complexas.' }
+          ]
+        }
+      ]
+    },
+    phase4: {
+      title: 'Revisao: Lideranca Tecnica',
+      games: [
+        {
+          id: 'phase4-quiz',
+          type: 'quiz',
+          title: 'Quiz de Lideranca',
+          icon: '\u26A1',
+          questions: [
+            { q: 'Qual a melhor metrica para apresentar ROI de IA para stakeholders?', options: ['Reducao de tokens', 'Horas economizadas por mes', 'Numero de prompts escritos', 'Tamanho do contexto'], correct: 1, explanation: '"Economizamos X horas/mes" e mais impactante que metricas tecnicas para stakeholders.' },
+            { q: 'Quando IA NAO e a solucao certa?', options: ['Quando o problema pode ser resolvido com uma regra simples', 'Quando voce tem muitos dados', 'Quando o modelo e muito caro', 'Nunca, IA resolve tudo'], correct: 0, explanation: 'Saber dizer "isso nao precisa de IA" e tao valioso quanto implementar. Over-engineering e desperdicio.' },
+            { q: 'O que sao KPIs relevantes para projetos de IA?', options: ['Apenas custo por token', 'Acuracia, tempo economizado e custo por request', 'Numero de linhas de codigo', 'Quantidade de modelos usados'], correct: 1, explanation: 'KPIs devem cobrir qualidade (acuracia), produtividade (tempo) e eficiencia (custo).' },
+            { q: 'Por que documentar prompts e importante para o time?', options: ['Nao e importante', 'Para cobrar mais caro', 'Permite reuso, consistencia e evolucao colaborativa', 'Apenas por compliance'], correct: 2, explanation: 'Documentar prompts cria uma base de conhecimento que o time todo pode usar e melhorar.' },
+            { q: 'Qual a principal responsabilidade de um tech lead em IA?', options: ['Escrever todos os prompts sozinho', 'Multiplicar a capacidade do time traduzindo IA em solucoes de negocio', 'Usar o modelo mais caro sempre', 'Nunca deixar o time usar IA sozinho'], correct: 1, explanation: 'Tech lead multiplica o time. Traduzir possibilidades de IA em solucoes de negocio e a chave.' },
+            { q: 'Qual o trade-off principal entre API vs fine-tuning?', options: ['Fine-tuning e sempre melhor', 'API e mais flexivel e rapida de iterar; fine-tuning e para especializacao profunda', 'Nao ha diferenca', 'API e mais barata sempre'], correct: 1, explanation: 'API permite iterar rapido com prompts. Fine-tuning exige dados e treino, mas especializa o modelo.' },
+            { q: 'O que deve conter um guideline de uso de IA para a empresa?', options: ['Apenas regras de seguranca', 'Boas praticas, anti-patterns, limites de uso e fluxos aprovados', 'So a lista de modelos permitidos', 'Nada, cada um usa como quiser'], correct: 1, explanation: 'Guidelines devem cobrir boas praticas, o que evitar, limites e fluxos para garantir uso responsavel.' },
+            { q: 'O que e um system prompt com 9 blocos?', options: ['Um prompt com 9 palavras', 'Estrutura profissional com persona, contexto, tarefa, formato, regras, exemplos, restricoes, fallbacks e meta-instrucoes', 'Um prompt que custa 9 tokens', 'Um template de email'], correct: 1, explanation: 'Os 9 blocos cobrem todos os aspectos de um system prompt robusto para producao.' }
+          ]
+        }
+      ]
+    }
+  }
 };
