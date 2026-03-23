@@ -86,7 +86,7 @@ const ROADMAP_DATA = {
       color: 'blue',
       title: 'Agentes & Sistemas de IA',
       duration: 'Semanas 6-12 \u2022 Projetar sistemas, nao apenas prompts',
-      tip: 'Aqui seu background de dev brilha. Agentes sao software que usa LLMs como motor de decisao. Sua experiencia fullstack te da vantagem enorme.',
+      tip: 'Agentes sao software que usa LLMs como motor de decisao. Experiencia com desenvolvimento te da vantagem enorme aqui.',
       sections: [
         {
           title: 'Arquitetura de Agentes',
