@@ -35,7 +35,7 @@
   </div>
 
   <div class="welcome-banner">
-    <strong>Novo por aqui?</strong> Comece pela <a href="#" onclick="showPhase('phase1', document.querySelector('.tab-btn'));return false;">Fase 1 — Fundamentos</a>. Nao sabe o que e o Claude? Va direto para o <a href="#" onclick="showPhase('faq', document.querySelectorAll('.tab-btn')[9]);return false;">FAQ</a>.
+    <strong>Novo por aqui?</strong> Comece pela <a href="#" onclick="showPhase('phase1', document.querySelector('.tab-btn'));return false;">Fase 1 — Fundamentos</a>. Nao sabe o que e o Claude? Va direto para o <a href="#" onclick="showPhase('faq', document.querySelectorAll('.tab-btn')[7]);return false;">FAQ</a>.
   </div>
 
   <div class="tabs">
@@ -46,9 +46,7 @@
     <button class="tab-btn" onclick="showPhase('docs',this)">Documentacao</button>
     <button class="tab-btn" onclick="showPhase('resources',this)">Recursos &amp; Cursos</button>
     <button class="tab-btn" onclick="showPhase('glossary',this)">Glossario</button>
-    <button class="tab-btn" onclick="showPhase('notes',this)">Anotacoes</button>
-    <button class="tab-btn" onclick="showPhase('discord',this)">Discord</button>
-    <button class="tab-btn" onclick="showPhase('faq',this)">FAQ</button>
+<button class="tab-btn" onclick="showPhase('faq',this)">FAQ</button>
   </div>
 
   <!-- Containers dinâmicos — preenchidos pelo roadmap.js -->
@@ -57,19 +55,6 @@
   <div class="phase" id="resources"></div>
   <div class="phase" id="glossary"></div>
 
-  <!-- Notas: estáticas, preservadas como estão -->
-  <div class="phase" id="notes">
-    <div class="phase-header">
-      <div class="phase-badge" style="background:var(--accent-glow);color:var(--accent);">N</div>
-      <div class="phase-info"><h2>Suas Anotacoes</h2><div class="duration">Tudo salvo automaticamente no navegador</div></div>
-    </div>
-    <div class="section"><h3>Aprendizados e Insights</h3><textarea class="notes-area" id="notesGeneral" placeholder="Registre aprendizados, descobertas e insights..." oninput="saveNotes()"></textarea></div>
-    <div class="section"><h3>Duvidas para Investigar</h3><textarea class="notes-area" id="notesQuestions" placeholder="Anote duvidas para investigar depois..." oninput="saveNotes()"></textarea></div>
-    <div class="section"><h3>Ideias para a Empresa</h3><textarea class="notes-area" id="notesIdeas" placeholder="Ideias de como aplicar IA na empresa..." oninput="saveNotes()"></textarea></div>
-    <div class="section"><h3>Prompts que Funcionaram</h3><textarea class="notes-area" id="notesPrompts" placeholder="Cole prompts com bons resultados..." oninput="saveNotes()" style="min-height:200px;font-family:'JetBrains Mono',monospace;font-size:0.82rem;"></textarea></div>
-  </div>
-
-  <div class="phase" id="discord"></div>
   <div class="phase" id="faq"></div>
 
   <div class="footer">

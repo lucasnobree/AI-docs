@@ -1081,24 +1081,6 @@ const ROADMAP_DATA = {
     { term: 'Structured Output', def: 'Forcar resposta em schema (JSON). API feature para integracao confiavel.' },
     { term: 'Chunking', def: 'Dividir documentos em pedacos para RAG. Tamanho e overlap afetam qualidade.' }
   ],
-  discord: {
-    intro: 'Crie um servidor pessoal com estes canais:',
-    channels: [
-      { name: '#daily-log', desc: '2-3 linhas do que estudou/praticou. Consistencia > volume.' },
-      { name: '#prompts-lab', desc: 'Prompts testados com resultado. Seu cookbook vivo.' },
-      { name: '#recursos', desc: 'Links de artigos, videos, tools. Organize com tags.' },
-      { name: '#duvidas', desc: 'Perguntas que surgirem. Responda quando descobrir.' },
-      { name: '#wins', desc: 'Vitorias. Prompt que resolveu problema real, agente que funcionou.' },
-      { name: '#ideias-empresa', desc: 'Oportunidades de IA no dia a dia.' }
-    ],
-    communities: [
-      { text: 'Anthropic Discord (oficial)', detail: null },
-      { text: 'LangChain Discord', detail: 'Muita discussao pratica sobre agentes e RAG.' },
-      { text: 'Hugging Face Discord', detail: 'Comunidade de ML. Modelos open-source e fine-tuning.' },
-      { text: 'MLOps Community', detail: 'ML/IA em producao. Relevante para fases 3-4.' }
-    ],
-    tip: 'Use o Claude Code ou chat como tutor particular 24/7 durante seus estudos. Mas valide informacoes criticas com a documentacao oficial.'
-  },
 
   faq: [
     {

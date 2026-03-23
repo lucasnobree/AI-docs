@@ -181,44 +181,6 @@ function buildGlossary() {
   el.innerHTML = headerHtml + gridHtml;
 }
 
-function buildDiscord() {
-  const el = document.getElementById('discord');
-  const d = ROADMAP_DATA.discord;
-
-  const headerHtml = `
-    <div class="phase-header">
-      <div class="phase-badge" style="background:rgba(88,101,242,0.15);color:#5865F2;">D</div>
-      <div class="phase-info"><h2>Organizacao no Discord</h2><div class="duration">Estrutura recomendada para estudos</div></div>
-    </div>`;
-
-  const channelsHtml = `
-    <div class="discord-section">
-      <h3>Estrutura de Canais Recomendada</h3>
-      <p>${d.intro}</p>
-      <ul class="channel-list">
-        ${d.channels.map(ch => `<li><span class="ch-name">${ch.name}</span> - ${ch.desc}</li>`).join('')}
-      </ul>
-    </div>`;
-
-  const communitiesHtml = `
-    <div class="section" style="margin-top:1.25rem;">
-      <h3>Comunidades para Participar</h3>
-      <ul class="checklist">
-        ${d.communities.map(c => {
-          const detailHtml = c.detail ? `<span class="detail">${c.detail}</span>` : '';
-          return `<li><input type="checkbox" onchange="saveProgress()"><span class="item-text">${c.text}${detailHtml}</span></li>`;
-        }).join('')}
-      </ul>
-    </div>`;
-
-  const tipHtml = `
-    <div class="tip" style="margin-top:1rem;">
-      <div class="tip-title">Dica: Claude como tutor</div>
-      ${d.tip}
-    </div>`;
-
-  el.innerHTML = headerHtml + channelsHtml + communitiesHtml + tipHtml;
-}
 
 function buildFaq() {
   const container = document.getElementById('faq');
@@ -287,7 +249,6 @@ function filterFaq(query) {
 // ============================================================
 
 const STORAGE_KEY = 'ai-roadmap-progress-v2';
-const NOTES_KEY = 'ai-roadmap-notes-v2';
 
 function showPhase(id, btn) {
     document.querySelectorAll('.phase').forEach(p => p.classList.remove('active'));
@@ -360,33 +321,12 @@ function showPhase(id, btn) {
     document.getElementById('globalFill').style.width = percent + '%';
   }
 
-  function saveNotes() {
-    const notes = {
-      general: document.getElementById('notesGeneral').value,
-      questions: document.getElementById('notesQuestions').value,
-      ideas: document.getElementById('notesIdeas').value,
-      prompts: document.getElementById('notesPrompts').value
-    };
-    localStorage.setItem(NOTES_KEY, JSON.stringify(notes));
-  }
-
-  function loadNotes() {
-    const saved = localStorage.getItem(NOTES_KEY);
-    if (saved) {
-      const n = JSON.parse(saved);
-      document.getElementById('notesGeneral').value = n.general || '';
-      document.getElementById('notesQuestions').value = n.questions || '';
-      document.getElementById('notesIdeas').value = n.ideas || '';
-      document.getElementById('notesPrompts').value = n.prompts || '';
-    }
-  }
 
   function exportProgress() {
     const data = {
       version: 2,
       date: new Date().toISOString(),
       progress: localStorage.getItem(STORAGE_KEY),
-      notes: localStorage.getItem(NOTES_KEY)
     };
     const blob = new Blob([JSON.stringify(data, null, 2)], {type: 'application/json'});
     const a = document.createElement('a');
@@ -403,9 +343,7 @@ function showPhase(id, btn) {
       try {
         const data = JSON.parse(e.target.result);
         if (data.progress) localStorage.setItem(STORAGE_KEY, data.progress);
-        if (data.notes) localStorage.setItem(NOTES_KEY, data.notes);
         loadProgress();
-        loadNotes();
         alert('Progresso importado com sucesso! Data do backup: ' + (data.date || 'desconhecida'));
       } catch (err) {
         alert('Erro ao importar: arquivo invalido.');
@@ -439,15 +377,6 @@ function showPhase(id, btn) {
       });
       txt += '\n';
     });
-
-    const notes = localStorage.getItem(NOTES_KEY);
-    if (notes) {
-      const n = JSON.parse(notes);
-      if (n.general) txt += '--- APRENDIZADOS ---\n' + n.general + '\n\n';
-      if (n.questions) txt += '--- DUVIDAS ---\n' + n.questions + '\n\n';
-      if (n.ideas) txt += '--- IDEIAS ---\n' + n.ideas + '\n\n';
-      if (n.prompts) txt += '--- PROMPTS ---\n' + n.prompts + '\n\n';
-    }
 
     const blob = new Blob([txt], {type: 'text/plain'});
     const a = document.createElement('a');
@@ -554,9 +483,7 @@ document.addEventListener('DOMContentLoaded', () => {
   buildDocs();
   buildResources();
   buildGlossary();
-  buildDiscord();
   buildFaq();           // FAQ: sem checkboxes, nao afeta indice do localStorage
   loadProgress();       // AFTER buildPhases/buildDocs — needs checkboxes in DOM
-  loadNotes();
   buildDocChecklists(); // AFTER buildPhases/buildDocs — uses querySelector on phases
 });
